@@ -226,7 +226,7 @@ The idea of using the template to specify the default values and then deriving t
 
 ## About the Name
 
-Originally, I wanted to call it "copyprops" but that name was too similar to an existing package. The name "simonize" reminded me of the automotive cleaning process and, since objects are effectivly cleaned and polished, the name seemed appropriate!
+Originally, I wanted to call it "copyprops" but that name was too similar to an existing package. The name "simonize" reminded me of the automotive cleaning process and, since objects are effectively cleaned and polished, the name seemed appropriate!
 
 ## License
 

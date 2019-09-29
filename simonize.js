@@ -35,15 +35,18 @@ function simonize(template, input) {
 }
 
 function convertArray(template, input) {
-  const retval = [];
+  var retval = [];
+  var i;
+  var n;
   if (isArray(input)) {
-    input.forEach(item => {
-      retval.push(simonize(template[0], item));
-    });
+    n = input.length;
+    for (i = 0; i < n; i++) {
+      retval.push(simonize(template[0], input[i]));
+    }
   } else {
-    const count = parseInt(template[1]);
-    if (!isNaN(count)) {
-      for (let i = 0; i < count; i++) {
+    n = parseInt(template[1]);
+    if (!isNaN(n)) {
+      for (i = 0; i < n; i++) {
         retval.push(template[0]);
       }
     }
@@ -52,13 +55,18 @@ function convertArray(template, input) {
 }
 
 function convertObject(template, input) {
-  const retval = {};
+  var retval = {};
+  var keys = Object.keys(template);
+  var i;
+  var n = keys.length;
+  var key;
   if (!isObject(input)) {
     input = {};
   }
-  Object.keys(template).forEach(prop => {
-    retval[prop] = simonize(template[prop], input[prop]);
-  });
+  for (i = 0; i < n; i++) {
+    key = keys[i];
+    retval[key] = simonize(template[key], input[key]);
+  }
   return retval;
 }
 
@@ -71,7 +79,7 @@ function convertString(template, input) {
 function convertNumber(template, input) {
   if (isNumber(input)) return input;
   if (isUndefined(input)) return template;
-  const num = parseFloat(input);
+  var num = parseFloat(input);
   if (isNaN(num)) {
     return !input ? 0 : 1;
   } else {
@@ -85,11 +93,11 @@ function convertBoolean(template, input) {
 }
 
 function isArray(arg) {
-  return Array.isArray(arg);
+  return Object.prototype.toString.call(arg) === '[object Array]';
 }
 
 function isObject(arg) {
-  return arg !== null && typeof arg === 'object' && !Array.isArray(arg);
+  return arg !== null && typeof arg === 'object' && !isArray(arg);
 }
 
 function isString(arg) {
