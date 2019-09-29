@@ -30,7 +30,7 @@ console.log(simonize(template));
 { id: 'new', name: '', email: '', admin: false }
 ```
 
-The template provided the default values in the absence of an input object. Let's assume we have the following input object (the second argument to `simonize`);
+The template provides the default values in the absence of an input object. Let's now assume we have the following input object (the second argument to `simonize`):
 
 ```javascript
 const input = {
