@@ -47,7 +47,7 @@ function convertArray(template, input) {
     n = parseInt(template[1]);
     if (!isNaN(n)) {
       for (i = 0; i < n; i++) {
-        retval.push(template[0]);
+        retval.push(simonize(template[0]));
       }
     }
   }
@@ -79,12 +79,7 @@ function convertString(template, input) {
 function convertNumber(template, input) {
   if (isNumber(input)) return input;
   if (isUndefined(input)) return template;
-  var num = parseFloat(input);
-  if (isNaN(num)) {
-    return !input ? 0 : 1;
-  } else {
-    return num;
-  }
+  return parseFloat(input);
 }
 
 function convertBoolean(template, input) {

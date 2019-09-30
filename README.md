@@ -22,53 +22,46 @@ const template = {
   admin: false
 };
 
-console.log(simonize(template));
+simonize(template);
 ```
 
+Result:
+
 ```javascript
-// Output
 { id: 'new', name: '', email: '', admin: false }
 ```
 
-The template provides the default values in the absence of an input object. Let's now assume we have the following input object (the second argument to `simonize`):
+The template provides the default values in the absence of an input object. The second parameter to `simonize` is an input object. In the following example, the input has _some_ of the template fields and the values are numbers instead of a string for the `id` and a boolean for the `admin` flag. Calling `simonize` with this input converts the values into the correct datatypes and merges them with the default values.
 
 ```javascript
-const input = {
-  id: 12345,
-  admin: 1
-};
+const input = { id: 12345, admin: 1 };
+
+simonize(template, input);
 ```
 
-In this case, the input has _some_ of the template fields but also has numeric properties instead of a string for the `id` and a boolean for the `admin` flag. Running `simonize` against this input converts and merges the specified values with the default values.
+Result:
 
 ```javascript
-console.log(simonize(template, input));
-```
-
-```
-// Output
 { id: '12345', name: '', email: '', admin: true }
 ```
 
-We see that the `id` was converted into a string and the `admin` flag into a boolean.
-
-The template provides both the **datatype** _and_ the **default value** for each property. In other words, it represents a very simple schema without the ceremony of a more robust framework such as JSON schema.
-
-The template can be arbitrarily complex including nested objects and array specifications. Nested objects are handled as expected. Arrays are slightly more involved and are discussed next.
+The template is a very simple schema providing both the **datatype** _and_ the **default value** for each property. Templates can be arbitrarily complex including nested objects and array specifications. Nested objects are handled as expected. Arrays are slightly more involved and are discussed next.
 
 ## Arrays
 
-Arrays are specified in the template using a one-element array where the single (zero-index) element is the template for the expected contents of each element in the input array. A second element can be optionally specified indicating a repeate value for the template in case there is no input array (useful for defaults). This is made clearer with the following examples:
+Arrays are specified in the template using a one- or two-element array where the zero-index element is the template for the expected contents of each element in the input array. A second element can be optionally specified indicating a repeate value for the template in case no array is present in the input (useful for defaults). This is made clearer with the following examples:
 
 In this example, only one of the elements in the template is overridden by the input.
 
 ```javascript
 const template = [{ name: 'default name', value: 'default value' }];
-console.log(simonize(template, [{ name: 'my name' }]));
+
+simonize(template, [{ name: 'my name' }]);
 ```
 
-```
-// Output
+Result:
+
+```javascript
 [{ name: 'my name', value: 'default value' }]
 ```
 
@@ -76,36 +69,42 @@ If, however, the input is undefined, then we get an empty array.
 
 ```javascript
 const template = [{ name: 'default name', value: 'default value' }];
-console.log(simonize(template));
+
+simonize(template);
 ```
 
-```
-//Output
+Result:
+
+```javascript
 []
 ```
 
-The optional second array element specifies a count to use for a default repeat value.
+The optional second array element specifies a count to use for a default repeat value (one in this case).
 
 ```javascript
 const template = [{ name: 'default name', value: 'default value' }, 1];
-console.log(simonize(template));
+
+simonize(template);
 ```
 
-```
-// Output
+Result:
+
+```javascript
 [{ name: 'default name', value: 'default value' }]
 ```
 
-All of these principles also work for primitive values:
+These concepts also apply to primitive values:
 
 ```javascript
 const template = [10, 5];
-console.log(simonize(template, [1, false, true, '4']));
+
+simonize(template, [1, 'x', 1 / 0, '4']);
 ```
 
-```
-// Output
-[1, 0, 1, 4]
+Result:
+
+```javascript
+[1, NaN, Infinity, 4]
 ```
 
 (This example also highlights number conversions, discussed below.)
@@ -114,11 +113,13 @@ But not specifying an input means that the second element (the repeat value) is 
 
 ```javascript
 const template = [10, 5];
-console.log(simonize(template));
+
+simonize(template);
 ```
 
-```
-// Output
+Result:
+
+```javascript
 [10, 10, 10, 10, 10]
 ```
 
@@ -128,33 +129,34 @@ An undefined template value (anywhere in the template structure), results in the
 
 ```javascript
 const template = { person: { name: undefined } };
-console.log(simonize(template, { person: { name: 12345 } }));
-console.log(simonize(template, { person: { name: 'Bob' } }));
+
+simonize(template, { person: { name: 12345 } });
+simonize(template, { person: { name: 'Bob' } });
 ```
 
-```
-// Output 1
-{ person: { name: 12345 } }
-// Output 2
-{ person: { name: 'Bob' } }
+Results:
+
+```javascript
+{ person: { name: 12345; } }
+{ person: { name: 'Bob'; } }
 ```
 
 A `null` template value (anywhere in the tempate structure), results in the input value being returned as-is but only if defined. An undefined input value results in the `null` default value being applied.
 
 ```javascript
 const template = { person: { name: null } };
-console.log(simonize(template, { person: { name: 12345 } }));
-console.log(simonize(template, { person: { name: 'Bob' } }));
-console.log(simonize(template, { person: {} }));
+
+simonize(template, { person: { name: 12345 } });
+simonize(template, { person: { name: 'Bob' } });
+simonize(template, { person: {} });
 ```
 
-```
-// Output 1
-{ person: { name: 12345 } }
-// Output 2
-{ person: { name: 'Bob' } }
-// Output 3
-{ person: { name: null } }
+Results:
+
+```javascript
+{ person: { name: 12345; } }
+{ person: { name: 'Bob'; } }
+{ person: { name: null; } }
 ```
 
 ## Undefined and Null Input Values
@@ -163,29 +165,35 @@ A undefined input value results in the template default value being applied and 
 
 ```javascript
 const template = { person: { name: 'Bob' } };
-console.log(simonize(template));
-console.log(simonize(template, {}));
-console.log(simonize(template, { person: undefined }));
+
+simonize(template);
+simonize(template, {});
+simonize(template, { person: undefined });
 ```
 
-```
-// Output
-{ person: { name: 'Bob' } }
+Results:
+
+```javascript
+{ person: { name: 'Bob'; } }
+{ person: { name: 'Bob'; } }
+{ person: { name: 'Bob'; } }
 ```
 
-However, when specifying a `null` in the input, it is taken as-is (no template defaults or type conversions are applied):
+However, when specifying a `null` value in the input, it is taken as-is (no template defaults or type conversions are applied):
 
 ```javascript
 const template = { person: { name: 'Bob' } };
-console.log(simonize(template, { person: null }));
-console.log(simonize(template, { person: { name: null } }));
+
+simonize(template, { person: null });
+simonize(template, { person: { name: null } });
 ```
 
-```
-// Output 1
-{ person: null }
-// Output 2
-{ person: { name: null } }
+Results:
+
+```javascript
+{ person: null; }
+{ person: { name: null; }
+}
 ```
 
 ## Type Conversions
@@ -196,14 +204,13 @@ The primitive values of string, number, and boolean are converted according to t
 
 - If the input is a string, return the input.
 - If the input is undefined, return the default value from the template.
-- Otherwise, convert the input to a string using the `toString()` method and return the converted value.
+- Otherwise, convert the input to a string using `toString()` and return the converted value.
 
 ### Number Conversion
 
 - If the input is a number, return the input.
 - If the input is undefined, return the default value from the template.
-- Parse the input using `parseFloat()` and return the parsed value if a valid number.
-- Otherwise (if `NaN`), return zero (0) if falsy and one (1) if truthy.
+- Otherwise, parse the input using `parseFloat()` and return the parsed value.
 
 ### Boolean Conversion
 
@@ -214,7 +221,7 @@ The primitive values of string, number, and boolean are converted according to t
 
 1. Any input properties that do not have a corresponding template property are **not** returned by `simonize`.
 
-2. Since the template is recursively traversed until primitive properties are discovered, this utility also performs a deep clone.
+2. Since the template and input are recursively traversed until primitive properties are discovered, this utility performs a deep clone of both the template and the input.
 
 ## Motivation
 
