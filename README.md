@@ -163,8 +163,6 @@ Results:
 { person: { name: 'Bob'; } }
 ```
 
-The intent behind this is that I consider null as "null unknown" (versus "null inapplicable") in terms of [database terminology and theory](https://en.wikipedia.org/wiki/Null_(SQL)).
-
 ## Type Conversions
 
 The primitive values of string, number, and boolean are converted according to the following rules:
