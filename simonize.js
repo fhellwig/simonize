@@ -22,14 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+const INVALID = 'Invalid template value: ';
+const UNSUPPORTED = 'Unsupported template type: ';
+
 function simonize(template, input) {
-  if (isNullOrUndefined(template)) return input;
+  if (isNullOrUndefined(template)) throw new Error(INVALID + template);
   if (isArray(template)) return convertArray(template, input);
   if (isObject(template)) return convertObject(template, input);
   if (isString(template)) return convertString(template, input);
   if (isNumber(template)) return convertNumber(template, input);
   if (isBoolean(template)) return convertBoolean(template, input);
-  throw new Error('Unsupported template type: ' + typeof template);
+  throw new Error(UNSUPPORTED + typeof template);
 }
 
 function convertArray(template, input) {

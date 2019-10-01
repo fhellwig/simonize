@@ -123,22 +123,21 @@ Result:
 [10, 10, 10, 10, 10]
 ```
 
-## Undefined and Null Template Values
+## Null or Undefined Template Values
 
-A null or undefined template value (anywhere in the template structure), results in the input value being returned as-is.
+Since the whole purpose of this utility is to provide "known-good" output with proper type conversions (or default values) being applied, a null or undefined template value is invalid and an exception is thrown.
 
 ```javascript
-const template = { person: { name: undefined } };
+const template = { security: { token: undefined } };
 
-simonize(template, { person: { name: 12345 } });
-simonize(template, { person: { name: 'Bob' } });
+// Maybe the token should be a string or an object?
+simonize(template, { security: { token: 12345 } });
 ```
 
 Results:
 
 ```javascript
-{ person: { name: 12345; } }
-{ person: { name: 'Bob'; } }
+Error: Invalid template value: undefined
 ```
 
 ## Null or Undefined Input Values
