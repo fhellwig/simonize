@@ -125,7 +125,7 @@ Result:
 
 ## Undefined and Null Template Values
 
-An undefined template value (anywhere in the template structure), results in the input being returned as-is.
+A null or undefined template value (anywhere in the template structure), results in the input value being returned as-is.
 
 ```javascript
 const template = { person: { name: undefined } };
@@ -141,27 +141,9 @@ Results:
 { person: { name: 'Bob'; } }
 ```
 
-A `null` template value (anywhere in the tempate structure), results in the input value being returned as-is but only if defined. An undefined input value results in the `null` default value being applied.
+## Null or Undefined Input Values
 
-```javascript
-const template = { person: { name: null } };
-
-simonize(template, { person: { name: 12345 } });
-simonize(template, { person: { name: 'Bob' } });
-simonize(template, { person: {} });
-```
-
-Results:
-
-```javascript
-{ person: { name: 12345; } }
-{ person: { name: 'Bob'; } }
-{ person: { name: null; } }
-```
-
-## Undefined and Null Input Values
-
-A undefined input value results in the template default value being applied and returned. All of the following result in the same output.
+A null or undefined input value results in the template default value being applied and returned. All of the following result in the same output.
 
 ```javascript
 const template = { person: { name: 'Bob' } };
@@ -169,32 +151,19 @@ const template = { person: { name: 'Bob' } };
 simonize(template);
 simonize(template, {});
 simonize(template, { person: undefined });
-```
-
-Results:
-
-```javascript
-{ person: { name: 'Bob'; } }
-{ person: { name: 'Bob'; } }
-{ person: { name: 'Bob'; } }
-```
-
-However, when specifying a `null` value in the input, it is taken as-is (no template defaults or type conversions are applied):
-
-```javascript
-const template = { person: { name: 'Bob' } };
-
 simonize(template, { person: null });
-simonize(template, { person: { name: null } });
 ```
 
 Results:
 
 ```javascript
-{ person: null; }
-{ person: { name: null; }
-}
+{ person: { name: 'Bob'; } }
+{ person: { name: 'Bob'; } }
+{ person: { name: 'Bob'; } }
+{ person: { name: 'Bob'; } }
 ```
+
+The intent behind this is that I consider null as "null unknown" (versus "null inapplicable") in terms of [database terminology and theory](https://en.wikipedia.org/wiki/Null_(SQL)).
 
 ## Type Conversions
 
@@ -203,18 +172,18 @@ The primitive values of string, number, and boolean are converted according to t
 ### String Conversion
 
 - If the input is a string, return the input.
-- If the input is undefined, return the default value from the template.
+- If the input is null or undefined, return the default value from the template.
 - Otherwise, convert the input to a string using `toString()` and return the converted value.
 
 ### Number Conversion
 
 - If the input is a number, return the input.
-- If the input is undefined, return the default value from the template.
+- If the input is null or undefined, return the default value from the template.
 - Otherwise, parse the input using `parseFloat()` and return the parsed value.
 
 ### Boolean Conversion
 
-- If the input is undefined, return the default value from the template.
+- If the input is null or undefined, return the default value from the template.
 - Otherwise, return the result of applying the `!!` operator pair to the input.
 
 ## Additional Notes

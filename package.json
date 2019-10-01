@@ -1,6 +1,6 @@
 {
   "name": "simonize",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Copies properties from one object into another using a super-simple template.",
   "main": "simonize.js",
   "scripts": {

@@ -23,9 +23,7 @@ SOFTWARE.
 */
 
 function simonize(template, input) {
-  if (isUndefined(template)) return input;
-  if (isNull(template)) return isUndefined(input) ? null : input;
-  if (isNull(input)) return null;
+  if (isNullOrUndefined(template)) return input;
   if (isArray(template)) return convertArray(template, input);
   if (isObject(template)) return convertObject(template, input);
   if (isString(template)) return convertString(template, input);
@@ -72,18 +70,18 @@ function convertObject(template, input) {
 
 function convertString(template, input) {
   if (isString(input)) return input;
-  if (isUndefined(input)) return template;
+  if (isNullOrUndefined(input)) return template;
   return input.toString();
 }
 
 function convertNumber(template, input) {
   if (isNumber(input)) return input;
-  if (isUndefined(input)) return template;
+  if (isNullOrUndefined(input)) return template;
   return parseFloat(input);
 }
 
 function convertBoolean(template, input) {
-  if (isUndefined(input)) return template;
+  if (isNullOrUndefined(input)) return template;
   return !!input;
 }
 
@@ -107,12 +105,8 @@ function isBoolean(arg) {
   return typeof arg === 'boolean';
 }
 
-function isUndefined(arg) {
-  return typeof arg === 'undefined';
-}
-
-function isNull(arg) {
-  return arg === null;
+function isNullOrUndefined(arg) {
+  return arg == null; // note double equals
 }
 
 module.exports = simonize;
