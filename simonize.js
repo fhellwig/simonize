@@ -26,7 +26,8 @@ const INVALID = 'Invalid template value: ';
 const UNSUPPORTED = 'Unsupported template type: ';
 
 function simonize(template, input) {
-  if (isNullOrUndefined(template)) throw new Error(INVALID + template);
+  if (template === null) return null;
+  if (typeof template === 'undefined') return input;
   if (isArray(template)) return convertArray(template, input);
   if (isObject(template)) return convertObject(template, input);
   if (isString(template)) return convertString(template, input);
@@ -36,34 +37,34 @@ function simonize(template, input) {
 }
 
 function convertArray(template, input) {
+  if (typeof input === 'undefined') {
+    input = [];
+    input.length = parseInt(template[1]) || 0;
+  }
+  if (!isArray(input)) {
+    return [];
+  }
   var retval = [];
   var i;
-  var n;
-  if (isArray(input)) {
-    n = input.length;
-    for (i = 0; i < n; i++) {
-      retval.push(simonize(template[0], input[i]));
-    }
-  } else {
-    n = parseInt(template[1]);
-    if (!isNaN(n)) {
-      for (i = 0; i < n; i++) {
-        retval.push(simonize(template[0]));
-      }
-    }
+  var n = input.length;
+  for (i = 0; i < n; i++) {
+    retval.push(simonize(template[0], input[i]));
   }
   return retval;
 }
 
 function convertObject(template, input) {
+  if (typeof input === 'undefined') {
+    input = {};
+  }
+  if (!isObject(input)) {
+    return {};
+  }
   var retval = {};
   var keys = Object.keys(template);
   var i;
   var n = keys.length;
   var key;
-  if (!isObject(input)) {
-    input = {};
-  }
   for (i = 0; i < n; i++) {
     key = keys[i];
     retval[key] = simonize(template[key], input[key]);
@@ -72,19 +73,24 @@ function convertObject(template, input) {
 }
 
 function convertString(template, input) {
-  if (isString(input)) return input;
-  if (isNullOrUndefined(input)) return template;
-  return input.toString();
+  if (typeof input === 'undefined') {
+    return template;
+  }
+  if (input === null) {
+    return '';
+  }
+  return String(input).trim();
 }
 
 function convertNumber(template, input) {
-  if (isNumber(input)) return input;
-  if (isNullOrUndefined(input)) return template;
-  return parseFloat(input);
+  var num = Number(input);
+  return isFinite(num) ? num : template;
 }
 
 function convertBoolean(template, input) {
-  if (isNullOrUndefined(input)) return template;
+  if (typeof input === 'undefined') {
+    return template;
+  }
   return !!input;
 }
 
@@ -106,10 +112,6 @@ function isNumber(arg) {
 
 function isBoolean(arg) {
   return typeof arg === 'boolean';
-}
-
-function isNullOrUndefined(arg) {
-  return arg == null; // note double equals
 }
 
 module.exports = simonize;

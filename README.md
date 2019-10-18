@@ -8,6 +8,15 @@ Copies properties from one object into another using a super-simple template.
 $ npm install --save simonize
 ```
 
+## Test
+
+Run `npm install` to install `mocha` (a dev dependency) and then run the tests.
+
+```bash
+$ npm install
+$ npm test
+```
+
 ## Usage
 
 The template defines both the shape of the output, the property datatypes, and default values.
@@ -98,13 +107,13 @@ These concepts also apply to primitive values:
 ```javascript
 const template = [10, 5];
 
-simonize(template, [1, 'x', 1 / 0, '4']);
+simonize(template, [1, null, 'x', 1 / 0, '4']);
 ```
 
 Result:
 
 ```javascript
-[1, NaN, Infinity, 4]
+[1, 0, 10, 10, 4]
 ```
 
 (This example also highlights number conversions, discussed below.)
@@ -123,26 +132,60 @@ Result:
 [10, 10, 10, 10, 10]
 ```
 
-## Null or Undefined Template Values
+## Null Template Values
 
-Since the whole purpose of this utility is to provide "known-good" output with proper type conversions (or default values) being applied, a null or undefined template value is invalid and an exception is thrown.
+A `null` template value will force the output value to null and the input is ignored.
 
 ```javascript
-const template = { security: { token: undefined } };
+const template = { security: { token: null } };
 
-// Maybe the token should be a string or an object?
 simonize(template, { security: { token: 12345 } });
 ```
 
-Results:
+Result:
 
 ```javascript
-Error: Invalid template value: undefined
+{ security: { token: null } }
 ```
 
-## Null or Undefined Input Values
+## Undefined Template Values
 
-A null or undefined input value results in the template default value being applied and returned. All of the following result in the same output.
+An `undefined` template value will return the input as-is. Note that this bypasses the inherent cloning behavior of `simonize`. *Use this feature with care or don't use it at all.*
+
+```javascript
+const template = { data: { any: undefined } };
+
+simonize(template, { data: { any: 1 / 0 } });
+```
+
+Result:
+
+```javascript
+{ data: { any: Infinity } }
+```
+
+## Null Input Values
+
+A `null` input value forces a built-in default value to be returned and the default value from the template is ignored.
+
+```javascript
+simonize(5, null)             // returns 0
+simonize('hello', null)       // returns ''
+simonize('true', null)        // returns false
+simonize({a: 1, b: 2}, null)  // returns {}
+simonize(['test'], null)      // returns []
+```
+
+For template objects and arrays, input values that are not objects or arrays are also considered to be `null`.
+
+```javascript
+simonize({a: 1, b: 2}, 'not an object') // returns {}
+simonize(['test'], 'not an array')      // returns []
+```
+
+## Undefined Input Values
+
+An `undefined` input value results in the template default value being applied and returned. All of the following result in the same output.
 
 ```javascript
 const template = { person: { name: 'Bob' } };
@@ -150,7 +193,6 @@ const template = { person: { name: 'Bob' } };
 simonize(template);
 simonize(template, {});
 simonize(template, { person: undefined });
-simonize(template, { person: null });
 ```
 
 Results:
@@ -159,28 +201,39 @@ Results:
 { person: { name: 'Bob'; } }
 { person: { name: 'Bob'; } }
 { person: { name: 'Bob'; } }
-{ person: { name: 'Bob'; } }
 ```
 
 ## Type Conversions
 
-The primitive values of string, number, and boolean are converted according to the following rules:
+Object, array, string, number, and boolean values are converted according to the following rules:
+
+### Object Conversion
+
+- If the input is `undefined`, replace the input with an empty object (`{}`).
+- If the input is `null` or the input is not an object, return an empty object (`{}`).
+- Recursively apply the template to each property of the input object.
+
+### Array Conversion
+
+- If the input is `undefined`, replace the input with an array of *`n`* undefined elements where *`n`* is the second element (default of `0`) from the template array.
+- If the input is `null` or the input is not an array, return an empty array (`[]`).
+- Recursively apply the template to each element of the input array.
 
 ### String Conversion
 
-- If the input is a string, return the input.
-- If the input is null or undefined, return the default value from the template.
-- Otherwise, convert the input to a string using `toString()` and return the converted value.
+- If the input is `undefined`, return the default value from the template.
+- If the input is `null`, return the empty string (`''`).
+- Convert the input to a string by calling `String(input).trim()` and return the result.
 
 ### Number Conversion
 
-- If the input is a number, return the input.
-- If the input is null or undefined, return the default value from the template.
-- Otherwise, parse the input using `parseFloat()` and return the parsed value.
+- Convert the input to a number by calling `Number(input)`.
+- Check the number by calling `isFinite(num)`.
+- If true, return the number. Otherwise, return the default value from the template.
 
 ### Boolean Conversion
 
-- If the input is null or undefined, return the default value from the template.
+- If the input is `undefined`, return the default value from the template.
 - Otherwise, return the result of applying the `!!` operator pair to the input.
 
 ## Additional Notes
