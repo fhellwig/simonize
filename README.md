@@ -171,7 +171,7 @@ A `null` input value forces a built-in default value to be returned and the defa
 ```javascript
 simonize(5, null)             // returns 0
 simonize('hello', null)       // returns ''
-simonize('true', null)        // returns false
+simonize(true, null)          // returns false
 simonize({a: 1, b: 2}, null)  // returns {}
 simonize(['test'], null)      // returns []
 ```
