@@ -107,34 +107,22 @@ These concepts also apply to primitive values:
 ```javascript
 const template = [10, 5];
 
-simonize(template, [1, null, 'x', 1 / 0, '4']);
-```
-
-Result:
-
-```javascript
-[1, 0, 10, 10, 4]
-```
-
-(This example also highlights number conversions, discussed below.)
-
-But not specifying an input means that the second element (the repeat value) is used.
-
-```javascript
-const template = [10, 5];
-
+simonize(template, [1, null, 'x', 1 / 0, '4', undefined]);
 simonize(template);
 ```
 
 Result:
 
 ```javascript
-[10, 10, 10, 10, 10]
+[ 1, 0, 10, 10, 4, 10 ]
+[ 10, 10, 10, 10, 10 ]
 ```
+
+(This example highlights number conversions, discussed below, as well as the use of the repeat value.)
 
 ## Null Template Values
 
-A `null` template value will force the output value to null and the input is ignored.
+A `null` template value will force the output value to `null` and the input is ignored.
 
 ```javascript
 const template = { security: { token: null } };

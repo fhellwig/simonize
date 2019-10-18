@@ -115,3 +115,7 @@ function isBoolean(arg) {
 }
 
 module.exports = simonize;
+
+const template = [10, 5];
+console.log(simonize(template, [1, null, 'x', 1 / 0, '4', undefined]));
+console.log(simonize(template));
