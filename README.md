@@ -111,7 +111,7 @@ simonize(template, [1, null, 'x', 1 / 0, '4', undefined]);
 simonize(template);
 ```
 
-Result:
+Results:
 
 ```javascript
 [ 1, 0, 10, 10, 4, 10 ]
