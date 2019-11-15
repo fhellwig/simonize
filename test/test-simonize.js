@@ -2,7 +2,7 @@ const simonize = require('../simonize');
 const assert = require('assert');
 
 const template = {
-  array: [5, 2],
+  array: [5, [undefined, undefined]],
   object: { a: 1, b: 2 },
   string: 'test',
   number: 10,

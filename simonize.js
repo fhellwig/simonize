@@ -38,8 +38,7 @@ function simonize(template, input) {
 
 function convertArray(template, input) {
   if (typeof input === 'undefined') {
-    input = [];
-    input.length = parseInt(template[1]) || 0;
+    input = isArray(template[1]) ? template[1] : [];
   }
   if (!isArray(input)) {
     return [];

@@ -58,7 +58,7 @@ The template is a very simple schema providing both the **datatype** _and_ the *
 
 ## Arrays
 
-Arrays are specified in the template using a one- or two-element array where the zero-index element is the template for the expected contents of each element in the input array. A second element can be optionally specified indicating a repeate value for the template in case no array is present in the input (useful for defaults). This is made clearer with the following examples:
+Arrays are specified in the template using a one- or two-element array where the zero-index element is the template for the expected contents of each element in the input array. A second element can be optionally specified indicating a default array in case no array is present in the input. This is made clearer with the following examples:
 
 In this example, only one of the elements in the template is overridden by the input.
 
@@ -88,10 +88,10 @@ Result:
 []
 ```
 
-The optional second array element specifies a count to use for a default repeat value (one in this case).
+The optional second array element specifies a default array. In the following example, the default array contains one `undefined` element so the template is copied to the output one time.
 
 ```javascript
-const template = [{ name: 'default name', value: 'default value' }, 1];
+const template = [{ name: 'default name', value: 'default value' }, [undefined]];
 
 simonize(template);
 ```
@@ -105,7 +105,7 @@ Result:
 These concepts also apply to primitive values:
 
 ```javascript
-const template = [10, 5];
+const template = [10, [undefined, 5]];
 
 simonize(template, [1, null, 'x', 1 / 0, '4', undefined]);
 simonize(template);
@@ -115,10 +115,10 @@ Results:
 
 ```javascript
 [ 1, 0, 10, 10, 4, 10 ]
-[ 10, 10, 10, 10, 10 ]
+[ 10, 5 ]
 ```
 
-(This example highlights number conversions, discussed below, as well as the use of the repeat value.)
+This example highlights number conversions, discussed below, as well as the use of the default array. Note that the second (`template[1]`) default array can have undefined values, which results in the template array default value (`template[0]`) to be used or it can specify actual values.
 
 ## Null Template Values
 
@@ -203,7 +203,7 @@ Object, array, string, number, and boolean values are converted according to the
 
 ### Array Conversion
 
-- If the input is `undefined`, replace the input with an array of *`n`* undefined elements where *`n`* is the second element (default of `0`) from the template array.
+- If the input is `undefined`, replace the input with either the value of the second template array element or an empty array if the second template element is not an array
 - If the input is `null` or the input is not an array, return an empty array (`[]`).
 - Recursively apply the template to each element of the input array.
 
