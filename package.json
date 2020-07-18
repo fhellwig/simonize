@@ -1,0 +1,27 @@
+{
+  "name": "simonize",
+  "version": "1.2.1",
+  "description": "Copies properties from one object into another using a super-simple template.",
+  "main": "simonize.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fhellwig/simonize.git"
+  },
+  "keywords": [
+    "object",
+    "properties",
+    "template"
+  ],
+  "author": "Frank Hellwig <frank@hellwig.org>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fhellwig/simonize/issues"
+  },
+  "homepage": "https://github.com/fhellwig/simonize#readme",
+  "devDependencies": {
+    "mocha": "^8.0.1"
+  }
+}
