@@ -22,8 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-const INVALID = 'Invalid template value: ';
-const UNSUPPORTED = 'Unsupported template type: ';
+var UNSUPPORTED = 'Unsupported template type: ';
 
 function simonize(template, input) {
   if (template === null) return null;
