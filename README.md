@@ -246,7 +246,7 @@ Originally, I wanted to call it "copyprops" but that name was too similar to an 
 
 MIT License
 
-Copyright (c) 2019 Frank Hellwig
+Copyright (c) 2022 Frank Hellwig
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
