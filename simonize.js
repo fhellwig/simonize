@@ -22,9 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-var UNSUPPORTED = 'Unsupported template type: ';
+const UNSUPPORTED = 'Unsupported template type: ';
 
-function simonize(template, input) {
+export function simonize(template, input) {
   if (template === null) return null;
   if (typeof template === 'undefined') return input;
   if (isArray(template)) return convertArray(template, input);
@@ -42,10 +42,9 @@ function convertArray(template, input) {
   if (!isArray(input)) {
     return [];
   }
-  var retval = [];
-  var i;
-  var n = input.length;
-  for (i = 0; i < n; i++) {
+  const retval = [];
+  const n = input.length;
+  for (let i = 0; i < n; i++) {
     retval.push(simonize(template[0], input[i]));
   }
   return retval;
@@ -58,13 +57,9 @@ function convertObject(template, input) {
   if (!isObject(input)) {
     return {};
   }
-  var retval = {};
-  var keys = Object.keys(template);
-  var i;
-  var n = keys.length;
-  var key;
-  for (i = 0; i < n; i++) {
-    key = keys[i];
+  const retval = {};
+  const keys = Object.keys(template);
+  for (const key of keys) {
     retval[key] = simonize(template[key], input[key]);
   }
   return retval;
@@ -81,7 +76,7 @@ function convertString(template, input) {
 }
 
 function convertNumber(template, input) {
-  var num = Number(input);
+  const num = Number(input);
   return isFinite(num) ? num : template;
 }
 
@@ -111,5 +106,3 @@ function isNumber(arg) {
 function isBoolean(arg) {
   return typeof arg === 'boolean';
 }
-
-module.exports = simonize;

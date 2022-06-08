@@ -1,8 +1,9 @@
 {
   "name": "simonize",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Copies properties from one object into another using a super-simple template.",
   "main": "simonize.js",
+  "type": "module",
   "scripts": {
     "test": "mocha"
   },
@@ -22,6 +23,6 @@
   },
   "homepage": "https://github.com/fhellwig/simonize#readme",
   "devDependencies": {
-    "mocha": "^9.2.1"
+    "mocha": "^10.0.0"
   }
 }

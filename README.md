@@ -5,7 +5,7 @@ Copies properties from one object into another using a super-simple template.
 ## Installation
 
 ```bash
-$ npm install --save simonize
+$ npm install simonize
 ```
 
 ## Test
@@ -71,7 +71,7 @@ simonize(template, [{ name: 'my name' }]);
 Result:
 
 ```javascript
-[{ name: 'my name', value: 'default value' }]
+[{ name: 'my name', value: 'default value' }];
 ```
 
 If, however, the input is undefined, then we get an empty array.
@@ -85,13 +85,16 @@ simonize(template);
 Result:
 
 ```javascript
-[]
+[];
 ```
 
 The optional second array element specifies a default array. In the following example, the default array contains one `undefined` element so the template is copied to the output one time.
 
 ```javascript
-const template = [{ name: 'default name', value: 'default value' }, [undefined]];
+const template = [
+  { name: 'default name', value: 'default value' },
+  [undefined]
+];
 
 simonize(template);
 ```
@@ -99,7 +102,7 @@ simonize(template);
 Result:
 
 ```javascript
-[{ name: 'default name', value: 'default value' }]
+[{ name: 'default name', value: 'default value' }];
 ```
 
 These concepts also apply to primitive values:
@@ -114,8 +117,7 @@ simonize(template);
 Results:
 
 ```javascript
-[ 1, 0, 10, 10, 4, 10 ]
-[ 10, 5 ]
+[1, 0, 10, 10, 4, 10][(10, 5)];
 ```
 
 This example highlights number conversions, discussed below, as well as the use of the default array. Note that the second (`template[1]`) default array can have undefined values, which results in the template array default value (`template[0]`) to be used or it can specify actual values.
@@ -133,12 +135,16 @@ simonize(template, { security: { token: 12345 } });
 Result:
 
 ```javascript
-{ security: { token: null } }
+{
+  security: {
+    token: null;
+  }
+}
 ```
 
 ## Undefined Template Values
 
-An `undefined` template value will return the input as-is. Note that this bypasses the inherent cloning behavior of `simonize`. *Use this feature with care or don't use it at all.*
+An `undefined` template value will return the input as-is. Note that this bypasses the inherent cloning behavior of `simonize`. _Use this feature with care or don't use it at all._
 
 ```javascript
 const template = { data: { any: undefined } };
@@ -149,7 +155,11 @@ simonize(template, { data: { any: 1 / 0 } });
 Result:
 
 ```javascript
-{ data: { any: Infinity } }
+{
+  data: {
+    any: Infinity;
+  }
+}
 ```
 
 ## Null Input Values
@@ -157,18 +167,18 @@ Result:
 A `null` input value forces a built-in default value to be returned and the default value from the template is ignored.
 
 ```javascript
-simonize(5, null)             // returns 0
-simonize('hello', null)       // returns ''
-simonize(true, null)          // returns false
-simonize({a: 1, b: 2}, null)  // returns {}
-simonize(['test'], null)      // returns []
+simonize(5, null); // returns 0
+simonize('hello', null); // returns ''
+simonize(true, null); // returns false
+simonize({ a: 1, b: 2 }, null); // returns {}
+simonize(['test'], null); // returns []
 ```
 
 For template objects and arrays, input values that are not objects or arrays are also considered to be `null`.
 
 ```javascript
-simonize({a: 1, b: 2}, 'not an object') // returns {}
-simonize(['test'], 'not an array')      // returns []
+simonize({ a: 1, b: 2 }, 'not an object'); // returns {}
+simonize(['test'], 'not an array'); // returns []
 ```
 
 ## Undefined Input Values
@@ -186,9 +196,21 @@ simonize(template, { person: undefined });
 Results:
 
 ```javascript
-{ person: { name: 'Bob'; } }
-{ person: { name: 'Bob'; } }
-{ person: { name: 'Bob'; } }
+{
+  person: {
+    name: 'Bob';
+  }
+}
+{
+  person: {
+    name: 'Bob';
+  }
+}
+{
+  person: {
+    name: 'Bob';
+  }
+}
 ```
 
 ## Type Conversions
